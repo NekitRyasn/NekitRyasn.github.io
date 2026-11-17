@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Lvl Up Button XP — Tap, level up, unlock achievements</title>
+  <meta name="description" content="Lvl Up Button XP is a simple one-tap clicker. Tap to earn XP, unlock 13 achievements, and watch a rewarded ad for +500 XP.">
+  <link rel="icon" href="assets/icon.png" type="image/png">
+  <style>
+    :root {
+      --bg: #f6f8ff;
+      --card: #ffffff;
+      --text: #1b2433;
+      --muted: #5d6b82;
+      --primary: #4b70ff;
+      --primary-dark: #3355e8;
+      --accent: #ffb020;
+      --line: #e6ebf5;
+      --radius: 22px;
+      --shadow: 0 18px 50px rgba(27, 36, 51, .10);
+    }
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      font-family: system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+    }
+    a { color: var(--primary-dark); }
+    .wrap { width: min(1120px, 92vw); margin: 0 auto; }
+    header {
+      position: sticky; top: 0; z-index: 20;
+      backdrop-filter: blur(12px);
+      background: rgba(246, 248, 255, .88);
+      border-bottom: 1px solid var(--line);
+    }
+    .nav { display: flex; align-items: center; gap: 18px; padding: 14px 0; }
+    .brand { display: flex; align-items: center; gap: 12px; font-weight: 800; text-decoration: none; color: var(--text); }
+    .brand img { width: 42px; height: 42px; border-radius: 12px; }
+    .nav-links { display: flex; gap: 20px; margin-left: auto; }
+    .nav-links a { color: var(--muted); text-decoration: none; font-weight: 600; font-size: 14px; }
+    .nav-links a:hover { color: var(--text); }
+    .lang { display: flex; gap: 6px; background: #fff; border: 1px solid var(--line); border-radius: 999px; padding: 4px; }
+    .lang button {
+      border: 0; background: transparent; color: var(--muted); font-weight: 700;
+      padding: 6px 12px; border-radius: 999px; cursor: pointer; font-size: 13px;
+    }
+    .lang button.active { background: var(--primary); color: #fff; }
+
+    main { padding: 54px 0 30px; }
+    .hero { display: grid; grid-template-columns: 1.15fr .85fr; gap: 46px; align-items: center; }
+    .hero h1 { font-size: clamp(34px, 5vw, 58px); line-height: 1.05; margin: 0 0 16px; letter-spacing: -1px; }
+    .hero p.lead { font-size: 19px; color: var(--muted); margin: 0 0 28px; max-width: 520px; }
+    .badge {
+      display: inline-flex; align-items: center; gap: 8px; background: #fff;
+      border: 1px solid var(--line); color: var(--muted); font-size: 13px; font-weight: 700;
+      padding: 7px 13px; border-radius: 999px; margin-bottom: 18px;
+    }
+    .badge span { width: 8px; height: 8px; border-radius: 50%; background: #35c46a; }
+    .play-btn {
+      display: inline-flex; align-items: center; gap: 12px; text-decoration: none;
+      background: #111318; color: #fff; padding: 13px 22px; border-radius: 14px;
+      font-weight: 700; box-shadow: var(--shadow);
+    }
+    .play-btn:hover { background: #1d2129; }
+    .play-btn svg { width: 26px; height: 26px; }
+    .play-btn small { display: block; font-size: 11px; font-weight: 600; opacity: .7; letter-spacing: .4px; text-transform: uppercase; }
+    .play-btn strong { display: block; font-size: 17px; line-height: 1.1; }
+    .hero-art { position: relative; display: flex; justify-content: center; }
+    .hero-art img {
+      width: min(360px, 100%); border-radius: 28%; box-shadow: 0 30px 70px rgba(75, 112, 255, .30);
+    }
+
+    section { padding: 46px 0; }
+    h2 { font-size: clamp(26px, 3.4vw, 38px); margin: 0 0 10px; letter-spacing: -.5px; }
+    .section-lead { color: var(--muted); margin: 0 0 28px; font-size: 17px; }
+
+    .shots { display: grid; grid-template-columns: repeat(2, 1fr); gap: 26px; }
+    .shot {
+      background: #fff; border: 1px solid var(--line); border-radius: var(--radius);
+      padding: 18px; box-shadow: var(--shadow); text-align: center;
+    }
+    .shot img { width: min(300px, 100%); border-radius: 18px; display: block; margin: 0 auto; }
+    .shot p { margin: 14px 0 4px; color: var(--muted); font-size: 14px; }
+
+    .features { display: grid; grid-template-columns: repeat(4, 1fr); gap: 18px; }
+    .feature {
+      background: var(--card); border: 1px solid var(--line); border-radius: var(--radius);
+      padding: 22px; box-shadow: 0 10px 30px rgba(27,36,51,.05);
+    }
+    .feature .ico { font-size: 28px; line-height: 1; margin-bottom: 12px; }
+    .feature h3 { margin: 0 0 6px; font-size: 17px; }
+    .feature p { margin: 0; color: var(--muted); font-size: 14px; }
+
+    .privacy-card {
+      background: linear-gradient(135deg, #1b2433, #2c3a52); color: #eef2ff;
+      border-radius: var(--radius); padding: 30px; display: flex; gap: 24px;
+      align-items: center; justify-content: space-between; flex-wrap: wrap;
+    }
+    .privacy-card p { margin: 6px 0 0; color: #b9c4dd; max-width: 620px; }
+    .privacy-card a.btn {
+      background: #fff; color: #1b2433; text-decoration: none; font-weight: 800;
+      padding: 12px 20px; border-radius: 12px; white-space: nowrap;
+    }
+
+    footer { border-top: 1px solid var(--line); padding: 26px 0 40px; color: var(--muted); font-size: 14px; }
+    .footer-row { display: flex; gap: 18px; justify-content: space-between; flex-wrap: wrap; align-items: center; }
+
+    @media (max-width: 900px) {
+      .hero { grid-template-columns: 1fr; gap: 30px; }
+      .hero-art { order: -1; }
+      .features { grid-template-columns: repeat(2, 1fr); }
+      .nav-links { display: none; }
+    }
+    @media (max-width: 560px) {
+      .shots { grid-template-columns: 1fr; }
+      .features { grid-template-columns: 1fr; }
+      .nav { gap: 10px; }
+      .brand span.full { display: none; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="wrap nav">
+      <a class="brand" href="./">
+        <img src="assets/icon.png" alt="Lvl Up Button XP icon">
+        <span class="full">Lvl Up Button XP</span>
+      </a>
+      <nav class="nav-links">
+        <a href="#features" data-en="Features" data-ru="Возможности">Features</a>
+        <a href="#screenshots" data-en="Screenshots" data-ru="Скриншоты">Screenshots</a>
+        <a href="privacy.html" data-en="Privacy" data-ru="Конфиденциальность">Privacy</a>
+      </nav>
+      <div class="lang" role="group" aria-label="Language">
+        <button type="button" data-lang="en" class="active">EN</button>
+        <button type="button" data-lang="ru">RU</button>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <div class="wrap">
+      <section class="hero" style="padding-top:0">
+        <div>
+          <div class="badge"><span></span><em data-en="Free on Google Play" data-ru="Бесплатно в Google Play">Free on Google Play</em></div>
+          <h1 data-en="Tap. Level up. Unlock everything." data-ru="Тапай. Прокачивайся. Открывай всё.">Tap. Level up. Unlock everything.</h1>
+          <p class="lead" data-en="A simple, satisfying clicker. Tap the big button to earn XP, unlock 13 achievements, and watch a rewarded ad for +500 XP." data-ru="Простой и затягивающий кликер. Тапай по большой кнопке, получай XP, открывай 13 достижений и смотри рекламу за +500 XP.">
+            A simple, satisfying clicker. Tap the big button to earn XP, unlock 13 achievements, and watch a rewarded ad for +500 XP.
+          </p>
+          <a class="play-btn" href="https://play.google.com/store/apps/details?id=com.nickdev.lvlupbuttonxp" target="_blank" rel="noopener">
+            <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M4 3.5v17l15-8.5L4 3.5Z" fill="#fff"/></svg>
+            <span>
+              <small data-en="Get it on" data-ru="Скачать в">Get it on</small>
+              <strong>Google Play</strong>
+            </span>
+          </a>
+        </div>
+        <div class="hero-art">
+          <img src="assets/icon.png" alt="Lvl Up Button XP game icon">
+        </div>
+      </section>
+
+      <section id="screenshots">
+        <h2 data-en="Screenshots" data-ru="Скриншоты">Screenshots</h2>
+        <p class="section-lead" data-en="The whole game is one screen — and one very satisfying button." data-ru="Вся игра — один экран и одна очень приятная кнопка.">The whole game is one screen — and one very satisfying button.</p>
+        <div class="shots">
+          <div class="shot">
+            <img src="assets/screenshot-main.png" alt="Main game screen" loading="lazy">
+            <p data-en="Tap the button, earn XP" data-ru="Тапай и получай XP">Tap the button, earn XP</p>
+          </div>
+          <div class="shot">
+            <img src="assets/screenshot-achievements.png" alt="Achievements screen" loading="lazy">
+            <p data-en="13 achievements with progress" data-ru="13 достижений с прогрессом">13 achievements with progress</p>
+          </div>
+        </div>
+      </section>
+
+      <section id="features">
+        <h2 data-en="Features" data-ru="Возможности">Features</h2>
+        <p class="section-lead" data-en="Built for short sessions and long-term progression." data-ru="Для коротких сессий и долгого прогресса.">Built for short sessions and long-term progression.</p>
+        <div class="features">
+          <div class="feature">
+            <div class="ico">👆</div>
+            <h3 data-en="One-tap gameplay" data-ru="Игра в один тап">One-tap gameplay</h3>
+            <p data-en="Every tap gives +1 XP with a satisfying floating number." data-ru="Каждый тап даёт +1 XP и приятную всплывающую цифру.">Every tap gives +1 XP with a satisfying floating number.</p>
+          </div>
+          <div class="feature">
+            <div class="ico">🏆</div>
+            <h3 data-en="13 achievements" data-ru="13 достижений">13 achievements</h3>
+            <p data-en="Unlock milestones from 1 XP up to 15,000 XP." data-ru="Открывай вехи от 1 XP до 15 000 XP.">Unlock milestones from 1 XP up to 15,000 XP.</p>
+          </div>
+          <div class="feature">
+            <div class="ico">📺</div>
+            <h3 data-en="Rewarded ad bonus" data-ru="Бонус за рекламу">Rewarded ad bonus</h3>
+            <p data-en="Watch a short video and get +500 XP instantly." data-ru="Посмотри короткое видео и получи +500 XP сразу.">Watch a short video and get +500 XP instantly.</p>
+          </div>
+          <div class="feature">
+            <div class="ico">🔊</div>
+            <h3 data-en="Sound &amp; mute" data-ru="Звук и отключение">Sound &amp; mute</h3>
+            <p data-en="Tap, reward and achievement sounds — with a mute toggle." data-ru="Звуки тапа, награды и достижений — с кнопкой отключения.">Tap, reward and achievement sounds — with a mute toggle.</p>
+          </div>
+        </div>
+      </section>
+
+      <section>
+        <div class="privacy-card">
+          <div>
+            <h2 style="margin:0;color:#fff" data-en="Your data stays on your device" data-ru="Твои данные остаются на устройстве">Your data stays on your device</h2>
+            <p data-en="Progress is saved locally. The game does not require an account. Ads are provided by Unity LevelPlay." data-ru="Прогресс хранится локально. Игра не требует аккаунта. Реклама предоставляется Unity LevelPlay.">
+              Progress is saved locally. The game does not require an account. Ads are provided by Unity LevelPlay.
+            </p>
+          </div>
+          <a class="btn" href="privacy.html" data-en="Privacy Policy" data-ru="Политика конфиденциальности">Privacy Policy</a>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <footer>
+    <div class="wrap footer-row">
+      <span>© <span id="year">2026</span> NickDev · <span data-en="Lvl Up Button XP" data-ru="Lvl Up Button XP">Lvl Up Button XP</span></span>
+      <span><a href="privacy.html" data-en="Privacy Policy" data-ru="Политика конфиденциальности">Privacy Policy</a> · <a href="mailto:nikto1252005228@gmail.com">nikto1252005228@gmail.com</a></span>
+    </div>
+  </footer>
+
+  <script>
+    (function () {
+      var saved = localStorage.getItem("lvlup.lang") || "en";
+      function apply(lang) {
+        document.documentElement.lang = lang;
+        document.querySelectorAll("[data-en]").forEach(function (el) {
+          el.textContent = el.getAttribute("data-" + lang);
+        });
+        document.querySelectorAll(".lang button").forEach(function (b) {
+          b.classList.toggle("active", b.getAttribute("data-lang") === lang);
+        });
+        localStorage.setItem("lvlup.lang", lang);
+      }
+      document.querySelectorAll(".lang button").forEach(function (b) {
+        b.addEventListener("click", function () { apply(b.getAttribute("data-lang")); });
+      });
+      apply(saved);
+      document.getElementById("year").textContent = new Date().getFullYear();
+    })();
+  </script>
+</body>
+</html>
